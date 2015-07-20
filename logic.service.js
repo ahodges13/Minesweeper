@@ -18,60 +18,43 @@ angular.module('minesweeperApp')
 
     //Build the grid, based on specs
     this.startGame = function(height, width) {
-      var setFalse = function () { return {bomb:false,neighbors:0} }
+      var setFalse = function () { return {bomb:false,neighbors:-1} }
       return _.times(height, function () { return _.times(width, setFalse) })
     }
 
-    //Run through one iteration of the game of life
-    this.iterate = function(game) {
+    //Calculate bomb neighbors, and assign numbers accordingly
+    this.countBombs = function(game) {
       //Assume this is the last iteration, until a cell stays alive or is born
-      game.stillAlive = false;
+      // game.stillAlive = false;
       //Repaint the new board, after the iteration is complete
       game.grid = _(game.grid).map(function (v, i) {
         return _(v).map(function (cell, k) {
-          //If cell is already alive, check if it will continue to live
-          //If cell is already dead, check if it will be born to become alive
-          return cell ? this.willLive(game, i, k) : this.isBorn(game, i, k);
+          //If cell is a bomb, no need to count neighbors
+          //If cell isn't a bomb, count the neighbors that are bombs, assign number
+          cell.neighbors = cell.bomb ? null : this.countNeighbors(game, i, k);
         }, this);
       }, this);
       return game;
     };
 
-    //Check is a cell that is alive will live through the iteration
-    this.willLive = function(game, row, col) {
-      //Any live cell with two or three live neighbours lives on to the next generation
-      var neighbours = this.getNeighbours(game, row, col);
-      if(neighbours >= 2 && neighbours <=3){
-        return true;
-      }
-      //Something has changed, keep playing
-      game.stillAlive = true;
-      return false;
+    //Check how many neighbors of a cell are bombs
+    this.countNeighbors = function(game, row, col) {
+      var count = this.getNeighbours(game, row, col);
+      console.log("count = "+count);
+      return count;
     };
 
-    //Check if a cell that is dead will be born
-    this.isBorn = function(game, row, col) {
-      //Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction
-      var neighbours = this.getNeighbours(game, row, col);
-      if(neighbours == 3){
-        //Something has changed, keep playing
-        game.stillAlive = true;
-        return true;
-      }
-      return false;
-    };
-
-    //Count how many neighbours of this cell are alive
+    //Count how many neighbours of this cell are a bomb
     this.getNeighbours = function(game, row, col) {
       return _.filter(NEIGHBORS, function(neighbour){
         return this.validCell(game, neighbour[0]+row, neighbour[1]+col);
       }, this).length;
     };
 
-    //Check that a cell is within the bounds of the grid
+    //Check that a cell is within the bounds of the grid, and if so, is it a bomb
     this.validCell = function(game, row, col) {
       if(row>=0 && row<game.grid.length && col>=0 && col<game.grid[0].length){
-        if(game.grid[row][col]){
+        if(game.grid[row][col].bomb){
           return true;
         }
       }

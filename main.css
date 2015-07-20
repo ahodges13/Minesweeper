@@ -44,6 +44,10 @@
   color: #000000;
 }
 
+.neighbors {
+  color: #6c4f8f;
+}
+
 .btnContainer {
   display: flex;
   justify-content: flex-end;

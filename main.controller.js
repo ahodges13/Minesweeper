@@ -38,10 +38,12 @@ angular.module('minesweeperApp')
       console.log("got into random");
       $scope.clear();
       var times = _.random(1,game.height * game.width);
-      console.log("times = "+times);
+      //randomly assign bombs
       _.times(times, function(){
         (game.grid[_.random(0,game.height-1)][_.random(0,game.width-1)]).bomb = true;
       });
+      //populate bomb neighbor numbers
+      game = logic.countBombs(game);
       // $scope.grid = game.grid;
     };
 

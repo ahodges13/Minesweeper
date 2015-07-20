@@ -26,7 +26,7 @@
   <div class="gridContainer">
     <div class="row" ng-repeat="row in grid">
       <div class="col-xs-1 cellContainer" ng-repeat="cell in row track by $index">
-        <div class="box-row" ng-click="toggle($parent.$index, $index)" ng-class="{'alive glyphicon glyphicon-certificate': cell.bomb}"></div>
+        <div class="box-row" ng-click="toggle($parent.$index, $index)" ng-class="{'alive glyphicon glyphicon-certificate': cell.bomb, 'neighbors': cell.neighbors >= 0 && !cell.bomb}">{{cell.neighbors}}</div>
       </div>
     </div>
   </div>
