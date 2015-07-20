@@ -62,4 +62,15 @@ angular.module('minesweeperApp')
       return false;
     };
 
+    //A bomb was clicked, so we must reveal the entire game grid
+    this.revealAll = function(grid) {
+      grid = _(grid).map(function (v, i) {
+        return _(v).map(function (cell, k) {
+          cell.isPlayed = true;
+          return cell;
+        }, this);
+      }, this);
+      return grid;
+    };
+
   });

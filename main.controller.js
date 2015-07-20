@@ -30,11 +30,16 @@ angular.module('minesweeperApp')
 
     //Reveal what's behind a cell
     $scope.toggle = function(row, col){
-      console.log("row = "+row);
-      console.log("col = "+col);
-      console.log("game.grid[row][col] = "+JSON.stringify(game.grid[row][col]));
-      game.grid[row][col].isPlayed = true;
-      $scope.grid = game.grid;
+      //reveal that cell, if the cell is not a bomb
+      if(game.grid[row][col].bomb != true){
+        game.grid[row][col].isPlayed = true;
+        $scope.grid = game.grid;
+      }
+      //reveal entire grid, if the cell is a bomb
+      else {
+        game.grid = logic.revealAll(game.grid);
+        $scope.grid = game.grid;
+      }
     };
 
     $scope.random = function(){
