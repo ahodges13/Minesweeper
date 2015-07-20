@@ -37,7 +37,7 @@ angular.module('minesweeperApp')
     $scope.random = function(){
       console.log("got into random");
       $scope.clear();
-      var times = _.random(1,game.height * game.width);
+      var times = _.random(1,(game.height * game.width)/2);
       //randomly assign bombs
       _.times(times, function(){
         (game.grid[_.random(0,game.height-1)][_.random(0,game.width-1)]).bomb = true;
