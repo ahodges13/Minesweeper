@@ -48,6 +48,10 @@
   color: #6c4f8f;
 }
 
+.covered {
+  background: #b29cc7;
+}
+
 .btnContainer {
   display: flex;
   justify-content: flex-end;

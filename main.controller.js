@@ -28,9 +28,12 @@ angular.module('minesweeperApp')
       $scope.grid = game.grid;
     }
 
-    //Turn a cell from alive to dead & vice versa
+    //Reveal what's behind a cell
     $scope.toggle = function(row, col){
-      game.grid[row][col] = !game.grid[row][col];
+      console.log("row = "+row);
+      console.log("col = "+col);
+      console.log("game.grid[row][col] = "+JSON.stringify(game.grid[row][col]));
+      game.grid[row][col].isPlayed = true;
       $scope.grid = game.grid;
     };
 
@@ -47,26 +50,26 @@ angular.module('minesweeperApp')
       // $scope.grid = game.grid;
     };
 
-    //Start the game
-    $scope.play = function() {
-      game.stillAlive = true;
-      continuous();
-    };
+    // //Start the game
+    // $scope.play = function() {
+    //   game.stillAlive = true;
+    //   continuous();
+    // };
 
-    //Stop the game
-    $scope.stop = function() {
-      game.stillAlive = false;
-    };
+    // //Stop the game
+    // $scope.stop = function() {
+    //   game.stillAlive = false;
+    // };
 
-    //Continuously loop through the steps until there are no more alive cells
-    function continuous() {
-      if (game.stillAlive) {
-        console.log("got into the if statement");
-        game = logic.iterate(game);
-        $scope.grid = game.grid;
-        $timeout(continuous, 1000);
-      }
-    }
+    // //Continuously loop through the steps until there are no more alive cells
+    // function continuous() {
+    //   if (game.stillAlive) {
+    //     console.log("got into the if statement");
+    //     game = logic.iterate(game);
+    //     $scope.grid = game.grid;
+    //     $timeout(continuous, 1000);
+    //   }
+    // }
 
     //Set up the grid when the page loads
     // $scope.clear();

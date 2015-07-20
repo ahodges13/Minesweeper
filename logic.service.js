@@ -18,7 +18,7 @@ angular.module('minesweeperApp')
 
     //Build the grid, based on specs
     this.startGame = function(height, width) {
-      var setFalse = function () { return {bomb:false,neighbors:-1} }
+      var setFalse = function () { return {bomb:false,neighbors:-1,isPlayed:false} }
       return _.times(height, function () { return _.times(width, setFalse) })
     }
 
@@ -32,6 +32,7 @@ angular.module('minesweeperApp')
           //If cell is a bomb, no need to count neighbors
           //If cell isn't a bomb, count the neighbors that are bombs, assign number
           cell.neighbors = cell.bomb ? null : this.countNeighbors(game, i, k);
+          return cell;
         }, this);
       }, this);
       return game;
