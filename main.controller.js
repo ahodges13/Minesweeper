@@ -12,13 +12,13 @@ angular.module('minesweeperApp')
 
     $scope.$watch('height', function() {
       game.height = $scope.height;
-      $scope.clear();
+      $scope.random();
     });
 
     $scope.$watch('width', function() {
       if($scope.width<=50){
         game.width = $scope.width;
-        $scope.clear();
+        $scope.random();
       }
     });
 
