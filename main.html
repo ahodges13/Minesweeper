@@ -1,0 +1,49 @@
+<div ng-include="'navbar/navbar.html'"></div>
+
+<header class="hero-unit" id="banner">
+  <div class="container">
+    <h1>Minesweeper!</h1>
+    <p class="lead">The objective of the game is to clear a rectangular board containing hidden "mines" without detonating any of them, with
+      help from clues about the number of neighboring mines in each field.</p>
+  </div>
+</header>
+
+<div class="container pageContainer">
+  <div class="dimensions">
+    <label for="height">Height:
+      <input type="input"
+             ng-model="height"
+             ng-value="{{height}}">
+    </label>
+    <label for="width">Width:
+      <input type="input"
+             ng-model="width"
+             ng-value="{{width}}">
+    </label>
+  </div>
+  <div ng-show="width>50" class="alert alert-danger" role="alert">Please select a width less than or equal to 50.</div>
+  <!-- The Grid -->
+  <div class="gridContainer">
+    <div class="row" ng-repeat="row in grid">
+      <div class="col-xs-1 cellContainer" ng-repeat="cell in row track by $index">
+        <div class="box-row" ng-click="toggle($parent.$index, $index)" ng-class="{'alive glyphicon glyphicon-certificate': cell.bomb}"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btnContainer">
+    <!-- <button class= "btn" ng-click="play()">Let's Play!</button>
+    <button class= "btn" ng-click="stop()">Stop Game</button>
+    <button class= "btn" ng-click="clear()">Clear Grid</button> -->
+    <button class= "btn" ng-click="random()">Start New Game</button>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>
+      <a href="https://github.com/ahodges13">@ahodges13</a>
+    </p>
+  </div>
+</footer>
