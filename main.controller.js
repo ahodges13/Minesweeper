@@ -7,6 +7,7 @@ angular.module('minesweeperApp')
     var game={};
     $scope.height = 10;
     $scope.width = 10;
+    $scope.gameOver = false;
     game.height = $scope.height;
     game.width = $scope.width;
 
@@ -39,6 +40,7 @@ angular.module('minesweeperApp')
       else {
         game.grid = logic.revealAll(game.grid);
         $scope.grid = game.grid;
+        $scope.gameOver = true;
       }
     };
 
@@ -53,6 +55,7 @@ angular.module('minesweeperApp')
       //populate bomb neighbor numbers
       game = logic.countBombs(game);
       // $scope.grid = game.grid;
+      $scope.gameOver = false;
     };
 
     // //Start the game
