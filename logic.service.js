@@ -18,7 +18,7 @@ angular.module('minesweeperApp')
 
     //Build the grid, based on specs
     this.startGame = function(height, width) {
-      var setFalse = function () { return {bomb:false,neighbors:-1,isPlayed:false} }
+      var setFalse = function () { return {bomb:false, neighbors:-1, isPlayed:false, flag:false} }
       return _.times(height, function () { return _.times(width, setFalse) })
     }
 

@@ -58,6 +58,10 @@ angular.module('minesweeperApp')
       $scope.gameOver = false;
     };
 
+    $scope.setFlag = function(row, col){
+      game.grid[row][col].flag = true;
+    };
+
     // //Start the game
     // $scope.play = function() {
     //   game.stillAlive = true;
