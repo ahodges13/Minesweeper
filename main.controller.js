@@ -32,7 +32,14 @@ angular.module('minesweeperApp')
     //Reveal what's behind a cell
     $scope.toggle = function(row, col){
       //reveal that cell, if the cell is not a bomb
-      if(game.grid[row][col].bomb != true){
+      if(game.grid[row][col].neighbors == 0){
+        //reveal the current cell
+        game.grid[row][col].isPlayed = true;
+        //reveal it's neighbors
+        game.grid = logic.revealNeighbors(game.grid, row, col);
+        $scope.grid = game.grid;
+      }
+      else if(game.grid[row][col].bomb != true){
         game.grid[row][col].isPlayed = true;
         $scope.grid = game.grid;
       }
