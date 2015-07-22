@@ -74,22 +74,29 @@ angular.module('minesweeperApp')
     };
 
     //A cell was clicked that had zero bomb neighbors, so recursively reveal cells around it
-    this.revealNeighbors = function(grid, row, col){
-      //reveal neighbors
-      _.filter(NEIGHBORS, function(neighbour){
-        //check if neighbour is a valid cell
-        var currentRow = neighbour[0]+row;
-        var currentCol = neighbour[1]+col;
-        if(currentRow>=0 && currentRow<grid.length && currentCol>=0 && currentCol<grid[0].length){
-          //reveal that cell
-          grid[currentRow][currentCol].isPlayed = true;
-          //if neighbour has no bomb neighbors, call revealNeighbors on it
-          if(grid[currentRow][currentCol].neighbors == 0){
-            return this.revealNeighbors(grid, currentRow, currentCol);
+    this.revealNeighbors = function (grid, row, col){
+      function recursiveCall(grid, row, col){
+        grid[row][col].isPlayed = true;
+        //reveal neighbors
+        _.each(NEIGHBORS, function(neighbour){
+          //check if neighbour is a valid cell
+          var currentRow = neighbour[0]+row;
+          var currentCol = neighbour[1]+col;
+          if(currentRow>=0 && currentRow<grid.length && currentCol>=0 && currentCol<grid[0].length){
+            //if cell is not already revealed, don't go back down the rabbit hole!
+            if(grid[currentRow][currentCol].isPlayed != true){
+              //reveal that cell
+              grid[currentRow][currentCol].isPlayed = true;
+              //if neighbour has no bomb neighbors, call revealNeighbors on it
+              if(grid[currentRow][currentCol].neighbors == 0){
+                recursiveCall(grid, currentRow, currentCol);
+              }
+            }
           }
-        }
-      }, this).length;
-      //
+        }, this);
+        //
+      }
+      recursiveCall(grid, row, col);
       return grid;
     };
 

@@ -34,7 +34,7 @@ angular.module('minesweeperApp')
       //reveal that cell, if the cell is not a bomb
       if(game.grid[row][col].neighbors == 0){
         //reveal the current cell
-        game.grid[row][col].isPlayed = true;
+        //game.grid[row][col].isPlayed = true;
         //reveal it's neighbors
         game.grid = logic.revealNeighbors(game.grid, row, col);
         $scope.grid = game.grid;
@@ -54,7 +54,7 @@ angular.module('minesweeperApp')
     $scope.random = function(){
       console.log("got into random");
       $scope.clear();
-      var times = _.random(1,(game.height * game.width)/2);
+      var times = _.random(1,(game.height * game.width)/3);
       //randomly assign bombs
       _.times(times, function(){
         (game.grid[_.random(0,game.height-1)][_.random(0,game.width-1)]).bomb = true;
