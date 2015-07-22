@@ -84,8 +84,8 @@ angular.module('minesweeperApp')
           //reveal that cell
           grid[currentRow][currentCol].isPlayed = true;
           //if neighbour has no bomb neighbors, call revealNeighbors on it
-          if(grid[currentRow][currentCol].neighbors > 0){
-            this.revealNeighbors(grid, currentRow, currentCol);
+          if(grid[currentRow][currentCol].neighbors == 0){
+            return this.revealNeighbors(grid, currentRow, currentCol);
           }
         }
       }, this).length;
