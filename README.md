@@ -1,5 +1,15 @@
 # Minesweeper
 
+### Installation
+
+```
+git clone https://github.com/ahodges13/Minesweeper.git
+cd Minesweeper/
+npm i
+npm run dev
+```
+Go see app at http://localhost:9966/
+
 ### User Stories
 
 1.) Game Board Setup  
