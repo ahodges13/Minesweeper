@@ -2,8 +2,6 @@
 
 angular.module('minesweeperApp')
   .service('logic', function (_) {
-    // AngularJS will instantiate a singleton by calling "new" on this function
-
     //neighbour values
     var TOP_LEFT = [-1, -1];
     var TOP = [-1, 0];
@@ -16,6 +14,10 @@ angular.module('minesweeperApp')
 
     var NEIGHBORS = [TOP_LEFT, TOP, TOP_RIGHT, MIDDLE_LEFT, MIDDLE_RIGHT, BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT];
 
+    //Keep track of reveled cells
+    var counter = 0;
+    var logic = this;
+
     //Build the grid, based on specs
     this.startGame = function(height, width) {
       var setFalse = function () { return {bomb:false, neighbors:-1, isPlayed:false, flag:false} }
@@ -24,25 +26,16 @@ angular.module('minesweeperApp')
 
     //Calculate bomb neighbors, and assign numbers accordingly
     this.countBombs = function(game) {
-      //Assume this is the last iteration, until a cell stays alive or is born
-      // game.stillAlive = false;
       //Repaint the new board, after the iteration is complete
       game.grid = _(game.grid).map(function (v, i) {
         return _(v).map(function (cell, k) {
           //If cell is a bomb, no need to count neighbors
           //If cell isn't a bomb, count the neighbors that are bombs, assign number
-          cell.neighbors = cell.bomb ? null : this.countNeighbors(game, i, k);
+          cell.neighbors = cell.bomb ? null : this.getNeighbours(game, i, k);
           return cell;
         }, this);
       }, this);
       return game;
-    };
-
-    //Check how many neighbors of a cell are bombs
-    this.countNeighbors = function(game, row, col) {
-      var count = this.getNeighbours(game, row, col);
-      console.log("count = "+count);
-      return count;
     };
 
     //Count how many neighbours of this cell are a bomb
@@ -73,31 +66,48 @@ angular.module('minesweeperApp')
       return grid;
     };
 
+    //Counter methods - updated when a cell is revealed, or reset for new game
+    this.onePlayed = function() {
+      counter = counter + 1
+      console.log("counter = "+counter);
+    };
+
+    this.getCounter = function() {
+      return counter;
+    };
+
+    this.resetCounter = function() {
+      counter = 0;
+    };
+
     //A cell was clicked that had zero bomb neighbors, so recursively reveal cells around it
     this.revealNeighbors = function (grid, row, col){
       function recursiveCall(grid, row, col){
+        //Reveal this cell
         grid[row][col].isPlayed = true;
+        logic.onePlayed();
         //reveal neighbors
-        _.each(NEIGHBORS, function(neighbour){
+        _.filter(NEIGHBORS, function(neighbour){
           //check if neighbour is a valid cell
           var currentRow = neighbour[0]+row;
           var currentCol = neighbour[1]+col;
           if(currentRow>=0 && currentRow<grid.length && currentCol>=0 && currentCol<grid[0].length){
             //if cell is not already revealed, don't go back down the rabbit hole!
             if(grid[currentRow][currentCol].isPlayed != true){
-              //reveal that cell
-              grid[currentRow][currentCol].isPlayed = true;
               //if neighbour has no bomb neighbors, call revealNeighbors on it
-              if(grid[currentRow][currentCol].neighbors == 0){
+              if(grid[currentRow][currentCol].neighbors == 0 && grid[currentRow][currentCol].isPlayed == false){
                 recursiveCall(grid, currentRow, currentCol);
+              }
+              //else reveal that neighbor
+              else {
+                grid[currentRow][currentCol].isPlayed = true;
+                logic.onePlayed();
               }
             }
           }
         }, this);
-        //
       }
       recursiveCall(grid, row, col);
       return grid;
     };
-
   });

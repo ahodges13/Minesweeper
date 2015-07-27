@@ -10,16 +10,27 @@ angular.module('minesweeperApp')
     $scope.gameOver = false;
     game.height = $scope.height;
     game.width = $scope.width;
+    var bombs = 0;
+    $scope.counter = logic.getCounter();
 
+    //Update grid if height changes
     $scope.$watch('height', function() {
       game.height = $scope.height;
       $scope.random();
     });
 
+    //Update grid if width changes
     $scope.$watch('width', function() {
       if($scope.width<=50){
         game.width = $scope.width;
         $scope.random();
+      }
+    });
+
+    //Check if the user has won the game yet
+    $scope.$watch('counter', function() {
+      if((bombs + $scope.counter) == ($scope.height * $scope.width)){
+        $timeout(alert("You win!!!"), 1000);
       }
     });
 
@@ -31,17 +42,26 @@ angular.module('minesweeperApp')
 
     //Reveal what's behind a cell
     $scope.toggle = function(row, col){
-      //reveal that cell, if the cell is not a bomb
+      //if this cell does not have any bomb neighbors
       if(game.grid[row][col].neighbors == 0){
-        //reveal the current cell
-        //game.grid[row][col].isPlayed = true;
-        //reveal it's neighbors
-        game.grid = logic.revealNeighbors(game.grid, row, col);
-        $scope.grid = game.grid;
+        //make sure this cell hasn't been already played
+        if(game.grid[row][col].isPlayed != true){
+          //call logic funtion to reveal this cell and it's neighbors recursively, then update game accordingly
+          game.grid = logic.revealNeighbors(game.grid, row, col);
+          $scope.grid = game.grid;
+          $scope.counter = logic.getCounter();
+        }
       }
+      //else reveal that cell, if the cell is not a bomb
       else if(game.grid[row][col].bomb != true){
-        game.grid[row][col].isPlayed = true;
-        $scope.grid = game.grid;
+        //make sure this cell hasn't been already played
+        if(game.grid[row][col].isPlayed != true){
+          //reveal this cell and update game accordingly
+          game.grid[row][col].isPlayed = true;
+          logic.onePlayed();
+          $scope.grid = game.grid;
+          $scope.counter = logic.getCounter();
+        }
       }
       //reveal entire grid, if the cell is a bomb
       else {
@@ -51,48 +71,27 @@ angular.module('minesweeperApp')
       }
     };
 
+    //set up the game board with a random set and spread of bombs
     $scope.random = function(){
-      console.log("got into random");
+      //makre sure to reset counter, incase we've played before
+      logic.resetCounter();
+      //clear the board
       $scope.clear();
-      var times = _.random(1,(game.height * game.width)/3);
+      //calculate bombs to place
+      bombs = _.random(1,(game.height * game.width)/4);
       //randomly assign bombs
-      _.times(times, function(){
+      _.times(bombs, function(){
         (game.grid[_.random(0,game.height-1)][_.random(0,game.width-1)]).bomb = true;
       });
       //populate bomb neighbor numbers
       game = logic.countBombs(game);
-      // $scope.grid = game.grid;
+      //reset value, incase we've played before
       $scope.gameOver = false;
     };
 
+    //marking a bomb you think you've found
     $scope.setFlag = function(row, col){
       game.grid[row][col].flag = true;
     };
 
-    // //Start the game
-    // $scope.play = function() {
-    //   game.stillAlive = true;
-    //   continuous();
-    // };
-
-    // //Stop the game
-    // $scope.stop = function() {
-    //   game.stillAlive = false;
-    // };
-
-    // //Continuously loop through the steps until there are no more alive cells
-    // function continuous() {
-    //   if (game.stillAlive) {
-    //     console.log("got into the if statement");
-    //     game = logic.iterate(game);
-    //     $scope.grid = game.grid;
-    //     $timeout(continuous, 1000);
-    //   }
-    // }
-
-    //Set up the grid when the page loads
-    // $scope.clear();
-    // console.log("original game.grid = "+game.grid);
-    //Set up the mines
-    // $scope.random();
   });
